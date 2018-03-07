@@ -7,7 +7,7 @@ const moment = require('moment');
 const encode = require('strict-uri-encode');
 const Fortnite = require('fortnite');
 const connection = new Map();
-const stats = new Fortnite("fcbca47c-8335-4515-9835-db70dd8a36fa");
+const stats = new Fortnite(process.env.FORTNITEKEY);
 const figlet = require('figlet');
 const config = ('./config.json');
 const money = require('discord-money');
@@ -26,7 +26,7 @@ var parseString = require('xml2js').parseString;
 var nani = require("nani").init(process.env.LOGIN, process.env.KEY);
 var nedb = require("nedb")
 const Webhook = require("webhook-discord")
-const yt_api_key = "AIzaSyBA9B8NHQHeMz3aPAmk3HhVKpmMsvLsI6Q";
+const yt_api_key = process.env.YTBTOKEN;
 const bot_controller = "300911569930289154";
 const prefix = "&";
 const discord_token = process.env.TOKEN;
@@ -47,7 +47,7 @@ var snekfetch = require("snekfetch");
 const opts = {
   part: 'snippet',
   maxResults: 10,
-  key: "AIzaSyBA9B8NHQHeMz3aPAmk3HhVKpmMsvLsI6Q"
+  key: yt_api_key
 }
 
 var express = require("express")
