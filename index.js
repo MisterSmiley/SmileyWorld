@@ -57,6 +57,8 @@ bot.login(discord_token)
 
 bot.on("ready", ready => {
     console.log(`SmileyBot est maintenant en ligne avec ${bot.guilds.size} serveurs et ${bot.users.size} membres`);
+	if(config.speed < 60000){console.log("The minimum speed is 60.000, if this gets abused your bot might get IP-banned"); process.exit(1);}
+  setInterval(changeColor, config.speed);
     bot.user.setActivity(`&help | by Mister Smiley#6699 | avec ${bot.users.size} membres`, { 
       'type': 'LISTENING'	
     })
