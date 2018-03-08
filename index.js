@@ -65,7 +65,7 @@ bot.on("ready", ready => {
 
 bot.on("message", (message) => {
   if (message.channel.type == 'dm') {
-        message.channel.sendMessage("```diff\n- Error: I can only respond on a server, not through private messages```");
+        message.channel.send("```diff\n- Error: I can only respond on a server, not through private messages```");
       }
   });
 
