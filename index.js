@@ -907,7 +907,7 @@ if(!dice || dice != rolled) {
         'content':message.cleanContent.split(" ").splice(1).join(" "),
         'time':Date()
       }
-      fs.writeFile('./data/notes.json',JSON.stringify(notes),function(err){
+      fs.writeFile('./notes.json',JSON.stringify(notes),function(err){
         if(err) return;
         message.channel.send('Added to notes! Type `'+prefix+'mynotes` to see all your notes')
       })
