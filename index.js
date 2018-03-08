@@ -63,12 +63,6 @@ bot.on("ready", ready => {
     bot.user.setStatus('dnd')
 });
 
-bot.on("message", (message) => {
-  if (message.channel.type == 'dm') {
-        message.channel.send("```diff\n- Error: I can only respond on a server, not through private messages```");
-      }
-  });
-
 bot.on("guildCreate", guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   bot.user.setGame(`&help | by Mister Smiley#6699 | avec ${bot.users.size} membres`)
