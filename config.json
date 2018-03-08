@@ -1,5 +1,5 @@
 { 
-    "token": "NDA5Mjg3NDM1MzkwODEyMTcw.DVtPbQ.jfm90QJBRWizDgZ6S5g3K977RxU",
+    "token": process.env.TOKEN,
     "servers": [
             "403625143622041622",
             "413813414155124740"
