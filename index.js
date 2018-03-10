@@ -217,8 +217,7 @@ bot.on("message", async message => {
   }
   if(command === "add-money") {
     if (message.author.id === "300911569930289154") {
-            message.channel.send('**You can not use this command...**');
-            return;
+            return message.channel.send('**You can not use this command...**')
         }
 
         if (!args[0]) {
