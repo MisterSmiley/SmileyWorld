@@ -216,8 +216,9 @@ bot.on("message", async message => {
   })
   }
   if(command === "add-money") {
-    if (message.author.id === "300911569930289154") {
-            return message.channel.send('**You can not use this command...**')
+	 if (!message.member.roles.find('name', modRole)) { 
+            message.channel.send('**You need the role `' + modRole + '` to use this command...**');
+            return;
         }
 
         if (!args[0]) {
