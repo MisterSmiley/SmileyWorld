@@ -1105,5 +1105,318 @@ if(!dice || dice != rolled) {
         message.channel.send("You have to be able to kick/ban members to use this command")
     }
     }
+	if(command === "tempmute") {
+      if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("No can do.");
+      if(args[0] == "help"){
+        message.reply("Usage: &tempmute <user> <1s/m/h/d>");
+        return;
+      }
+      let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+      if(!tomute) return message.reply("Couldn't find user.");
+      if(tomute.hasPermission("MANAGE_MESSAGES")) return message.reply("Can't mute them!");
+      let reason = args.slice(2).join(" ");
+      if(!reason) return message.reply("Please supply a reason.");
+    
+      let muterole = message.guild.roles.find(`name`, "muted");
+      if(!muterole){
+        try{
+          muterole = await message.guild.createRole({
+            name: "muted",
+            color: "#000000",
+            permissions:[]
+          })
+          message.guild.channels.forEach(async (channel, id) => {
+            await channel.overwritePermissions(muterole, {
+              SEND_MESSAGES: false,
+              ADD_REACTIONS: false
+            });
+          });
+        }catch(e){
+          console.log(e.stack);
+        }
+      }
+      let mutetime = args[1];
+      if(!mutetime) return message.reply("You didn't specify a time!");
+    
+      message.delete().catch(O_o=>{});
+    
+      try{
+        await tomute.send(`Hi! You've been muted for ${mutetime}. Sorry!`)
+      }catch(e){
+        message.channel.send(`A user has been muted... but their DMs are locked. They will be muted for ${mutetime}`)
+      }
+    
+      let muteembed = new Discord.RichEmbed()
+      .setDescription(`Mute executed by ${message.author}`)
+      .setColor("RANDOM")
+      .addField("Muted User", tomute)
+      .addField("Muted in", message.channel)
+      .addField("Time", message.createdAt)
+      .addField("Length", mutetime)
+      .addField("Reason", reason);
+    
+      let incidentschannel = message.guild.channels.find(`name`, "log");
+      if(!incidentschannel) return message.reply("Please create a incidents channel first!");
+      incidentschannel.send(muteembed);
+    
+      await(tomute.addRole(muterole.id));
+    
+      setTimeout(function(){
+        tomute.removeRole(muterole.id);
+        message.channel.send(`<@${tomute.id}> has been unmuted!`);
+      }, ms(mutetime));
+    }
+    if(command === "npm") {
+    let embed = new Discord.RichEmbed()
+    if (args[0]) {
+      npmapi.getdetails(args.join('-'), data => {
+        if (data.name) {
+          embed.setColor("#c20d0d");
+          embed.setAuthor(data.name, 'https://i.imgur.com/24yrZxG.png', 'https://www.npmjs.com/package/' + data.name);
+          embed.setThumbnail("https://i.imgur.com/24yrZxG.png")
+          embed.addField(`**${data.name} info's**`, "**Description :** \n\n"+data.description+"\n\n**Lien :**\n\nhttps://www.npmjs.com/package/"+data.name+"\n\n**Keywords :** \n\n"+data.keywords+"\n\n**Installation :** \n\n`npm install --save "+data.name+"`\n\n**Repository :** \n\n"+data.homepage+"\n\n**Auteur :**\n\n"+data.author.name+" \n\n**Mail :** "+data.author.email)
+        } else {
+          embed.setColor("#c20d0d");
+          embed.setTitle("Package not found");
+          embed.setDescription(`Package not found`);
+        }
+        message.channel.send({embed});
+      });
+    } else {
+      embed.setColor("#c20d0d");
+      embed.setTitle("Package not found");
+      embed.setDescription(`Package not found`);
+      message.channel.send({embed});
+    }
+  }
+  if(command === "pokedex") {
+    P.getPokemonByName(args.join(' ')) 
+        .then(function(response) {
+            let abilities = [];
+            for(i in response.abilities) { abilities.push(response.abilities[i].ability.name) }
+            abilitiesString = abilities.join(', ')
+            let types = [];
+            for(i in response.types) {
+              types.push(response.types[i].type.name)
+            }
+            let typesString = types.join(', ')
+            let moves = [];
+            for(i in response.moves) {
+              if(i < 20)
+                  moves.push(response.moves[i].move.name);
+            }
+            let movesString = moves.join(', ')
+            
+            message.channel.sendEmbed(new Discord.RichEmbed()
+              .setTitle(`Info about ${response.name}`)
+              .addField(`Species:`, `${response.species.name}`, true)
+              .addField(`Height:`, `${response.height}`, true)
+              .addField(`Weight:`, `${response.weight}`, true)
+              .addField(`ID:`, `${response.id}`, true)
+              .addField(`Type(s):`, `${typesString}`, true)
+              .addField(`Move(s) (Top 20):`, `${movesString}`, true)
+              .addField(`Abilitie(s):`, `${abilitiesString}`, true)
+              .setThumbnail(response.sprites.front_default)
+              .setColor("#c20d0d")
+            );
+    })
+    .catch(function(error) {
+      message.channel.sendEmbed(new Discord.RichEmbed()
+        .addField('Error!', `There was an error! Please make sure that you're inputting an valid pokemon`)
+        .setColor(0xff5454)
+      );
+    });
+  }
+  if(command === "triggered") {
+    if(message.mentions.users.size < 1) {
+      Jimp.read(message.author.avatarURL).then(function (photo) {
+          photo.resize(512, 512)
+          Jimp.read('./img/trigger.png').then(function (lenna) {
+              photo.composite(lenna,0,0)
+              photo.getBuffer(Jimp.MIME_PNG, function (err, image) { message.channel.send({files:[{attachment:image,name:"file.png"}]}) })
+          })
+      })
+  } else if (message.mentions.users.size > 1) {
+      message.channel.sendEmbed(new Discord.RichEmbed()
+          .addField('Error!', `Please mention a single user!`)
+          .setColor("#c20d0d")
+      );
+      return;
+  } else {
+      let mention = message.guild.member(message.mentions.users.first());
+      Jimp.read(mention.user.avatarURL).then(function (photo) {
+          photo.resize(512, 512)
+          Jimp.read('./img/trigger.png').then(function (lenna) {
+              photo.composite(lenna,0,0)
+              photo.getBuffer(Jimp.MIME_PNG, function (err, image) { message.channel.send({files:[{attachment:image,name:"file.png"}]}) })
+          })
+      })
+  }
+  }
+  if(command === "test") {
+    if(message.content.startsWith(prefix + "triggered")) { 
+      var image = message.author.avatarURL; 
+      message.channel.send({ file: { attachment: "http://www.triggered-api.tk/api/v1/url=" + image, name: "triggered.gif" 
+      }}) 
+      }
+  }
+  if(command === "wasted") {
+    let msg = await message.channel.send('Generating...')
+    if(message.mentions.users.size < 1) {
+        Jimp.read(message.author.avatarURL).then(function (photo) {
+            photo.resize(512, 512).grayscale().gaussian(2)
+            Jimp.read('./img/wasted.png').then(function (lenna) {
+                photo.composite(lenna,0,0)
+                photo.getBuffer(Jimp.MIME_PNG, function (err, image) { 
+                    msg.delete();
+                    message.channel.send({files:[{attachment:image,name:"file.png"}]}) 
+                })
+            })
+        })
+    } else if (message.mentions.users.size > 1) {
+        message.channel.sendEmbed(new Discord.RichEmbed()
+            .addField('Error!', `Please mention a single user!`)
+            .setColor("#c20d0d")
+        );
+        return;
+    } else {
+        let mention = message.guild.member(message.mentions.users.first());
+        Jimp.read(mention.user.avatarURL).then(function (photo) {
+            photo.resize(512, 512).grayscale().gaussian(2)
+            Jimp.read('./img/wasted.png').then(function (lenna) {
+                photo.composite(lenna,0,0)
+                photo.getBuffer(Jimp.MIME_PNG, function (err, image) { 
+                    msg.delete();
+                    message.channel.send({files:[{attachment:image,name:"file.png"}]}) 
+                })
+            })
+        })
+    }
+  }
+  if(command === "jail") {
+    let msg = await message.channel.send('Generating...')
+    if(message.mentions.users.size < 1) {
+        Jimp.read(message.author.avatarURL).then(function (photo) {
+            photo.resize(512, 512).grayscale()
+            Jimp.read('./img/jail.png').then(function (lenna) {
+                photo.composite(lenna,0,0)
+                photo.getBuffer(Jimp.MIME_PNG, function (err, image) { 
+                    msg.delete();
+                    message.channel.send({files:[{attachment:image,name:"file.png"}]}) 
+                })
+            })
+        })
+    } else if (message.mentions.users.size > 1) {
+        message.channel.sendEmbed(new Discord.RichEmbed()
+            .addField('Error!', `Please mention a single user!`)
+            .setColor("#c20d0d")
+        );
+        return;
+    } else {
+        let mention = message.guild.member(message.mentions.users.first());
+        Jimp.read(mention.user.avatarURL).then(function (photo) {
+            photo.resize(512, 512).grayscale();
+            Jimp.read('./img/jail.png').then(function (lenna) {
+                photo.composite(lenna,0,0)
+                photo.getBuffer(Jimp.MIME_PNG, function (err, image) { message.channel.send({files:[{attachment:image,name:"file.png"}]}) })
+            })
+        })
+    }
+  }
+  if(command === "reverse") {
+    if(args.length < 1) {
+      message.channel.sendEmbed(new Discord.RichEmbed()
+          .addField('Error!', `Please give me an string to reverse!`)
+          .setColor("#c20d0d")
+      );
+      return;
+  }
+  let reverse = args.join(' ').split('').reverse().join('');
+  message.channel.send(reverse);
+  }
+  if(command === "urban") {
+    var write = 0;
+    var urban = require('urban'),
+        word = urban(args.join(' '));
+    word.first(function(json) {
+        if(json.definition.length < 1) return message.channel.send('Something went wrong...\n errcode: 0');
+        if(!json.example) return message.channel.send('Something went wrong...\n errcode: 1');
+        if(!json.author) return message.channel.send('Something went wrong...\n errcode: 2');
+        if(!json.thumbs_up) return message.channel.send('Something went wrong...\nerr code: 3');
+        if(!json.thumbs_down) return message.channel.send('Something went wrong...\nerr code: 4');
+        message.channel.sendEmbed(new Discord.RichEmbed()
+            .addField(`Definition of ${json.word}`, `${json.definition}`, true)
+            .addField(`Example`, `${json.example}`, true)
+            .addField(`Author`, `${json.author}`, true)
+            .addField(`Rating`, `:thumbsup: ${json.thumbs_up} :thumbsdown: ${json.thumbs_down}`, true)
+            .setColor("#c20d0d")
+        );
+    });
+  }
+  if(command === "yesno") {
+    request('https://yesno.wtf/api/', function(err, resp, body) {
+        let data = JSON.parse(body)
+        message.channel.sendEmbed(new Discord.RichEmbed()
+            .setImage(data.image)
+            .setColor("#c20d0d")
+        );
+    })
+  }
+  if(command === "math") {
+    var result
+    let args2 = message.content.split(" ").slice(1).join(" ");
+    
+    try {
+            result = thing.eval(args2)
+        } catch (error) {
+            console.log('Failed math calculation ' + args2 + '\nError: ' + error.stack)
+            message.channel.sendEmbed(new Discord.RichEmbed()
+                .addField('Error!', `Failed Calculation`)
+                .setColor(0xff5454)
+            );
+            return;
+            
+        } finally {
+            if (isNaN(parseFloat(result))) {
+            message.channel.sendEmbed(new Discord.RichEmbed()
+                .addField('Error!', `Calculation Error`)
+                .setColor(0xff5454)
+            );
+            return;
+        } else {
+            message.channel.sendEmbed(new Discord.RichEmbed()
+                .addField('Input:', `\`\`\`${args2}\`\`\``)
+                .addField('Answer:', `\`\`\`${result}\`\`\``)
+                .setColor(0x5697ff)
+            );
+            }
+        }
+  }
+  if(command === "botinfo") {
+    let member = message.mentions.members.first()
+      let botid = member.user.id
+        request('https://discordbots.org/api/bots/' + botid, (e, r, b)=> {
+          let contenu = JSON.parse(b)
+        if(contenu.error === "Not found")  {
+          message.channel.send("Ceci n'est pas un bot ou il n'est pas encore approuvé");
+        } else {
+        const embed = new Discord.RichEmbed()
+          embed.setTitle(contenu.username)
+          embed.setColor("#c20d0d")
+          embed.setFooter("Fait avec l'API discordbots.org");
+          embed.setTimestamp()
+          embed.addField("Description", contenu.shortdesc)
+          embed.addField("Certification", contenu.certifiedBot === true ? "Oui ✅" : "Non ❎")
+          embed.addField("Nombres de serveurs", contenu.server_count)
+          embed.addField("Librairie utilisé", contenu.lib)
+          embed.addField("Ajouté le", contenu.date)
+          embed.addField("Prefix", contenu.prefix)
+          embed.addField("Liens", "[Invitation](" + contenu.invite + ")\n[DBL.org](https://discordbots.org/bot/" + botid + " )\n[Github](" + contenu.github + ")\n[Website](" + contenu.website + ")")
+          embed.addField("Votes", contenu.points)
+          message.channel.send({embed});
+        }
+        })
+      }
+    }
 });
 
