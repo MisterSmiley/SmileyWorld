@@ -1416,7 +1416,6 @@ if(!dice || dice != rolled) {
           message.channel.send({embed});
         }
         })
-      }
-    }
+  }
 });
 
