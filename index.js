@@ -30,6 +30,7 @@ const yt_api_key = process.env.YTBTOKEN;
 const bot_controller = "300911569930289154";
 const prefix = "&";
 const discord_token = process.env.TOKEN;
+const npmapi = require('api-npm');
 const modRole = 'Economy Bot Admin';
 const music = ('runtime/music.js');
 const hook = new Webhook("https://discordapp.com/api/webhooks/413814187366809601/" + process.env.HOOKTOKEN)
