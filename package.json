@@ -9,6 +9,7 @@
   "author": "Mister Smiley",
   "license": "ISC",
   "dependencies": {
+    "api-npm": "^1.0.0",
     "child_process": "^1.0.2",
     "cleverbot.io": "^1.0.4",
     "discord-eco": "0.0.10",
