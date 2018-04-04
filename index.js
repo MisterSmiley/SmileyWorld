@@ -36,6 +36,7 @@ const music = ('runtime/music.js');
 const hook = new Webhook("https://discordapp.com/api/webhooks/413814187366809601/" + process.env.HOOKTOKEN)
 var youtubeNode = require("youtube-node");
 var ytdl = require("ytdl-core");
+var guilds = {};
 
 var youtube = new youtubeNode();
 
