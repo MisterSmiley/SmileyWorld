@@ -106,7 +106,9 @@ bot.on("message", async message => {
   if(message.content.indexOf(prefix) !== 0) return;
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
-  const command = args.shift().toLowerCase();
+  const command = args.shift().toLowerCase()
+  const member = message.member;
+  const msg = message.content.toLowerCase();
     if (sbl.indexOf(message.guild.id) != -1 && message.content.startsWith(prefix)) {
       message.channel.send("This server is blacklisted")
       return
