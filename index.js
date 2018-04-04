@@ -9,7 +9,7 @@ const encode = require('strict-uri-encode');
 const Fortnite = require('fortnite');
 const version = "2.0";
 const connection = new Map();
-const stats = new Fortnite("fcbca47c-8335-4515-9835-db70dd8a36fa");
+const stats = new Fortnite(process.env.FORTNITEKEY);
 const figlet = require('figlet');
 const config = ('./config.json');
 const money = require('discord-money');
@@ -32,30 +32,29 @@ var machintrucbidule = {
   "url": "http://api.giphy.com/v1/gifs/search",
   "permission": ["NORMAL"]
 };
-const warns = require('./data/warns.json');
-const sbl = require("./data/blservers.json");
-const ubl = require("./data/blusers.json");
+const warns = require('./warns.json');
+const sbl = require("./blservers.json");
+const ubl = require("./blusers.json");
 const weather = require('weather-js');
 var Jimp = require("jimp");
 var gm = require("gm");
 var parseString = require('xml2js').parseString;
-var nani = require("nani").init("mistersmiley-mvo1y", "tsr8a9thmJQJ23Xon9gY3zTddcrb8");
+var nani = require("nani").init("mistersmiley-mvo1y", process.env.KEY);
 var nedb = require("nedb")
 const Webhook = require("webhook-discord")
-const yt_api_key = "AIzaSyBA9B8NHQHeMz3aPAmk3HhVKpmMsvLsI6Q";
+const yt_api_key = process.env.YTBTOKEN;
 const bot_controller = "300911569930289154";
 const prefix = "&";
-const discord_token = "NDI0ODk1NDE2MDkwNDkyOTI5.DY_iOA.hBV56fp3nnTP1nZpz8MxBq6glbw";
+const discord_token = process.env.TOKEN;
 const modRole = 'Economy Bot Admin';
-const music = ('runtime/music.js');
-const hook = new Webhook("https://discordapp.com/api/webhooks/413814187366809601/vqULJhfMGdCldthwB0wSw1kgritiBlHfIeHUJIwfzvsWtRPiBPSTBXvzdCzhpBk_XH6r")
+const hook = new Webhook("https://discordapp.com/api/webhooks/413814187366809601/" + process.env.HOOKTOKEN)
 var youtubeNode = require("youtube-node");
 var ytdl = require("ytdl-core");
 var guilds = {};
 
 var youtube = new youtubeNode();
 
-youtube.setKey("AIzaSyBA9B8NHQHeMz3aPAmk3HhVKpmMsvLsI6Q");
+youtube.setKey(yt_api_key);
 youtube.addParam('type', 'video');
 
 var ffmpeg = require("ffmpeg-binaries");
@@ -64,7 +63,7 @@ var snekfetch = require("snekfetch");
 const opts = {
   part: 'snippet',
   maxResults: 10,
-  key: "AIzaSyBA9B8NHQHeMz3aPAmk3HhVKpmMsvLsI6Q"
+  key: yt_api_key
 }
 
 var express = require("express")
