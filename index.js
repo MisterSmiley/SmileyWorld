@@ -1294,6 +1294,20 @@ if(!dice || dice != rolled) {
           message.channel.send({embed});
         }
         })
+	    if (!guilds[message.guild.id]) {
+    guilds[message.guild.id] = {
+      queue: [],
+      queueNames: [],
+      isPlaying: false,
+      dispatcher: null,
+      voiceChannel: null,
+      skipReq: 0,
+      skippers: [],
+    };
+  }
+
+  if (message.author.equals(bot.user) || message.author.bot) return;
+
   }if (msg.startsWith(prefix + 'play')) {
     if (member.voiceChannel || guilds[message.guild.id].voiceChannel != null) {
       if (guilds[message.guild.id].queue.length > 0 || guilds[message.guild.id].isPlaying) {
