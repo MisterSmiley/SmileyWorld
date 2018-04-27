@@ -117,7 +117,7 @@ channel.send(newMemberEmbed);
 bot.on('guildMemberRemove', async member => {
   var channel = member.guild.channels.find('name', 'discussion-1');
   if (!channel) return
-  channel.send(`Au revoir ` + member.user + `.`);
+  channel.send(`Au revoir ` + member.user.username + `.`);
   bot.user.setGame(`&help | by Mister Smiley#6699 | avec ${bot.users.size} membres`)
 });
 
